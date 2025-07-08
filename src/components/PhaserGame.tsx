@@ -11,11 +11,10 @@ class MainScene extends Phaser.Scene {
 
   preload() {
     this.load.image('player', 'assets/player.png')
-    // Загрузка других ассетов
   }
 
   create() {
-    this.player = this.physics.add.sprite(400, 300, 'player')
+    this.player = this.physics.add.sprite(this.scale.width / 2, this.scale.height / 2, 'player')
 
     if (!this.input.keyboard) {
       throw new Error('Keyboard input not available')
@@ -50,10 +49,23 @@ const PhaserGame: React.FC = () => {
   useEffect(() => {
     if (gameRef.current) return
 
+    const resize = () => {
+      const width = window.innerWidth
+      const height = window.innerHeight
+
+      if (gameRef.current) {
+        gameRef.current.scale.resize(width, height)
+      }
+    }
+
     const config: Phaser.Types.Core.GameConfig = {
       type: Phaser.AUTO,
-      width: 800,
-      height: 600,
+      scale: {
+        mode: Phaser.Scale.RESIZE,
+        autoCenter: Phaser.Scale.CENTER_BOTH,
+        width: window.innerWidth,
+        height: window.innerHeight,
+      },
       physics: {
         default: 'arcade',
         arcade: {
@@ -66,14 +78,16 @@ const PhaserGame: React.FC = () => {
     }
 
     gameRef.current = new Phaser.Game(config)
+    window.addEventListener('resize', resize)
 
     return () => {
       gameRef.current?.destroy(true)
       gameRef.current = null
+      window.removeEventListener('resize', resize)
     }
   }, [])
 
-  return <div id="phaser-container" style={{ width: '100%', height: '100%' }} />
+  return <div id="phaser-container" style={{ width: '100vw', height: '100vh' }} />
 }
 
 export default PhaserGame
