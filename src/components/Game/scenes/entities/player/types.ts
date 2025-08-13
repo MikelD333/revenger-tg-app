@@ -9,5 +9,15 @@ export interface PlayerCreateProps {
 export enum PLAYER_ANIMATION_NAMES {
   IDLE = 'idle',
   WALK_LEFT = 'walk-left',
-  WALK_RIGHT = 'walk-right'
+  WALK_RIGHT = 'walk-right',
+  ATTACK_RIGHT = 'attack-right',
+  ATTACK_LEFT = 'attack-left'
+}
+
+export type TPlayerAnimation = {
+  end: number
+  name: PLAYER_ANIMATION_NAMES
+  sprite: string
+  start: number
+  repeat?: number
 }

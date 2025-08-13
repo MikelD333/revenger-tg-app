@@ -19,6 +19,7 @@ export class MainScene extends Phaser.Scene {
     this.load.image('player', 'assets/player.png')
     this.load.spritesheet('hero', 'assets/hero_spritesheet.png', { frameWidth: 56, frameHeight: 86, spacing: 2, margin: 2 })
     this.load.image('dojo', 'assets/revenger-dojo.png')
+    this.load.image('attack', 'assets/attack.png')
   }
 
   addFlashLightBoxes() {
@@ -93,7 +94,7 @@ export class MainScene extends Phaser.Scene {
       if (this.joystick) {
         this.joystick.destroy()
         this.joystick = null
-        this._player.setIdle()
+        this._player.startAutoAttack()
         this.cursorKeys = null
       }
     })  
@@ -105,6 +106,8 @@ export class MainScene extends Phaser.Scene {
     this.addBounds()
 
     this.initJoystickPlugin()
+
+    // this._player.startAutoAttack()
   }
 
   update() {

@@ -1,6 +1,7 @@
 import { TCursorKeys } from '../../types'
-import { PLAYER_SPEED, playerAnimations } from './constants'
+import { ATTACK_OFFSET_VALUE, PLAYER_SPEED, playerAnimations } from './constants'
 import { PLAYER_ANIMATION_NAMES, PlayerCreateProps } from './types'
+import { isNotNullOrUndef } from '@/helpers/isNotNullOrUndef';
 
 export class Player {
   private _playerSprite!: Phaser.Physics.Arcade.Sprite
@@ -8,6 +9,7 @@ export class Player {
   private _cameras!: Phaser.Cameras.Scene2D.CameraManager
   private _anims!: Phaser.Animations.AnimationManager
   private _lastXDirection: 'left' | 'right' = 'left'
+  private _autoattackTimer: Phaser.Time.TimerEvent | null = null
 
   constructor({ anims, cameras, physics, startX, startY }: PlayerCreateProps) {
     this._anims = anims
@@ -30,6 +32,24 @@ export class Player {
     this._playerSprite.setVelocity(0)
   }
 
+  startAutoAttack() {
+    this._playerSprite.setVelocity(0)
+    this._attackAnimation()
+
+    if (!!this._autoattackTimer) {
+      this._autoattackTimer.remove()
+    }
+
+    this._autoattackTimer = this._playerSprite.scene.time.addEvent({
+      delay: 2000,
+      callback: () => {
+        this._attackAnimation()
+      },
+      callbackScope: this,
+      loop: true
+    })
+  }  
+
   update(bounds: Phaser.Geom.Rectangle, cursorKeys: TCursorKeys) {
     this._initUpdate(bounds)
 
@@ -48,7 +68,14 @@ export class Player {
     if (cursorKeys.down.isDown) {
       this._moveDown()
     }
+  }
 
+  private _attackAnimation() {
+    const attackAnimation = this._lastXDirection === 'left'
+    ? PLAYER_ANIMATION_NAMES.ATTACK_LEFT
+    : PLAYER_ANIMATION_NAMES.ATTACK_RIGHT
+
+    this._playerSprite.anims.play(attackAnimation, true)
   }
 
   private _checkLastDirection() {
@@ -61,15 +88,40 @@ export class Player {
   }
 
   private _createPlayerAnimations() {
-    playerAnimations.map(({ end, name, sprite, start }) => 
+    playerAnimations.map(({ end, name, sprite, start, repeat }) => 
       this._anims.create({
         key: name,
         frames: this._anims.generateFrameNumbers(sprite, { start, end }),
         frameRate: 10,
-        repeat: -1
+        repeat: isNotNullOrUndef<number>(repeat) ? repeat : -1
       }))
 
     this._playerSprite.anims.play(PLAYER_ANIMATION_NAMES.IDLE)
+
+    this._playerSprite.on(
+      Phaser.Animations.Events.ANIMATION_UPDATE,
+      (animation: Phaser.Animations.Animation, frame: Phaser.Animations.AnimationFrame) => {
+        if (
+          (animation.key === PLAYER_ANIMATION_NAMES.ATTACK_LEFT
+          || animation.key === PLAYER_ANIMATION_NAMES.ATTACK_RIGHT)
+          && frame.index === 5
+        ) {
+          this._spanwAttackSlash()
+        }
+      }
+    )
+
+    this._playerSprite.on(
+      Phaser.Animations.Events.ANIMATION_COMPLETE,
+      (animation: Phaser.Animations.Animation) => {
+        if (
+          animation.key === PLAYER_ANIMATION_NAMES.ATTACK_LEFT
+          || animation.key === PLAYER_ANIMATION_NAMES.ATTACK_RIGHT
+        ) {
+          this._playerSprite.anims.play(PLAYER_ANIMATION_NAMES.IDLE)
+        }
+      }
+    )
   }
 
   private _initUpdate(bounds: Phaser.Geom.Rectangle) {
@@ -101,5 +153,23 @@ export class Player {
     this._playerSprite.setVelocityY(-PLAYER_SPEED)
 
     this._checkLastDirection()
+  }
+
+  private _spanwAttackSlash() {
+    const offsetX = this._lastXDirection === 'left' ? -ATTACK_OFFSET_VALUE : ATTACK_OFFSET_VALUE
+    const slash = this._playerSprite.scene.add.image(
+      this._playerSprite.x + offsetX,
+      this._playerSprite.y,
+      'attack'
+    )
+  
+    slash.setScale(1.2)
+    slash.setAlpha(0.8)
+  
+    if (this._lastXDirection === 'left') {
+      slash.setFlipX(true)
+    }
+  
+    this._playerSprite.scene.time.delayedCall(200, () => slash.destroy())  
   }
 }
