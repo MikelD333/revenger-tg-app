@@ -23,7 +23,7 @@ export class MainScene extends Phaser.Scene {
 
   addFlashLightBoxes() {
     const obstacles = this.physics.add.staticGroup()
-
+  
     flashlightBoxes.map(({ x, y, width, height }) => {
       const box = this.add.rectangle(x, y, width, height)
       this.physics.add.existing(box, true)
@@ -36,7 +36,7 @@ export class MainScene extends Phaser.Scene {
   }
 
   addBounds() {
-    this.movementBounds = new Phaser.Geom.Rectangle(29 + 16, 240, 935, 466)
+    this.movementBounds = new Phaser.Geom.Rectangle(60, 210, 905, 468)
 
     this.addFlashLightBoxes()
   }
