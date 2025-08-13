@@ -24,24 +24,3 @@ export const flashlightBoxes = [
     height: 38
   }
 ]
-
-export const animations = [
-  {
-    end: 7,
-    name: 'walk-left',
-    sprite: 'hero',
-    start: 0,
-  },
-  {
-    end: 15,
-    name: 'walk-right',
-    sprite: 'hero',
-    start: 8,
-  },
-  {
-    end: 21,
-    name: 'idle',
-    sprite: 'hero',
-    start: 16,
-  }
-]

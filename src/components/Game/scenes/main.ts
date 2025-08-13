@@ -1,12 +1,15 @@
 import Phaser from 'phaser'
 import VirtualJoystickPlugin from 'phaser3-rex-plugins/plugins/virtualjoystick-plugin.js'
-import { animations, flashlightBoxes } from './constants'
+import { flashlightBoxes } from './constants'
+import { Player } from './entities/player/player'
+import VirtualJoyStick from 'phaser3-rex-plugins/plugins/virtualjoystick'
+import { TCursorKeys } from './types'
 
 export class MainScene extends Phaser.Scene {
-  private player!: Phaser.Physics.Arcade.Sprite
-  private joystick!: any
+  private _player!: Player
   private movementBounds!: Phaser.Geom.Rectangle
-  private cursorKeys?: {left: any, right: any, up: any, down: any}
+  private joystick: VirtualJoyStick | null = null
+  private cursorKeys: TCursorKeys | null = null
 
   constructor() {
     super({ key: 'MainScene' })
@@ -29,7 +32,7 @@ export class MainScene extends Phaser.Scene {
       return box
     })
 
-    this.physics.add.collider(this.player, obstacles)
+    this._player.addCollider(obstacles)
   }
 
   addBounds() {
@@ -46,9 +49,13 @@ export class MainScene extends Phaser.Scene {
     this.cameras.main.setBounds(0, 0, background.width, background.height)
     this.physics.world.setBounds(0, 0, background.width, background.height)
 
-    this.player = this.physics.add.sprite(background.width / 2, background.height / 2, 'hero')
-    this.player.setCollideWorldBounds(true)
-    this.cameras.main.startFollow(this.player, true, 0.08, 0.08)
+    this._player = new Player({
+      anims: this.anims,
+      cameras: this.cameras,
+      physics: this.physics,
+      startX: background.width / 2,
+      startY: background.width / 2
+    })
   }
 
   initJoystickPlugin() {
@@ -81,15 +88,13 @@ export class MainScene extends Phaser.Scene {
         this.cursorKeys = this.joystick.createCursorKeys()
       }
     })
-
   
     this.input.on('pointerup', () => {
       if (this.joystick) {
         this.joystick.destroy()
         this.joystick = null
-        this.player.anims.play('idle')
-        this.cursorKeys = undefined
-        this.player.setVelocity(0)
+        this._player.setIdle()
+        this.cursorKeys = null
       }
     })  
   }
@@ -100,51 +105,11 @@ export class MainScene extends Phaser.Scene {
     this.addBounds()
 
     this.initJoystickPlugin()
-
-    animations.map(({ end, name, sprite, start }) =>
-      this.anims.create({
-        key: name,
-        frames: this.anims.generateFrameNumbers(sprite, { start, end }),
-        frameRate: 10,
-        repeat: -1
-      }))
-
-    // this.anims.create({ key: 'walk-right', frames: this.anims.generateFrameNumbers('hero', { start: 8, end: 15 }), frameRate: 10, repeat: -1 })
-    // this.anims.create({ key: 'walk-left', frames: this.anims.generateFrameNumbers('hero', { start: 0, end: 7 }), frameRate: 10, repeat: -1 })
-    // this.anims.create({ key: 'idle', frames: this.anims.generateFrameNumbers('hero', { start: 16, end: 21 }), frameRate: 10, repeat: -1 })
   }
 
   update() {
-    const speed = 200
-    if (this.joystick) {
+    if (!this.joystick || !this.cursorKeys) return
 
-      const bounds = this.movementBounds
-      this.player.x = Phaser.Math.Clamp(this.player.x, bounds.x, bounds.x + bounds.width)
-      this.player.y = Phaser.Math.Clamp(this.player.y, bounds.y, bounds.y + bounds.height)
-
-      this.player.setVelocity(0)
-
-      if (!this.cursorKeys) return
-  
-      if (this.cursorKeys.left.isDown) {
-        this.player.setVelocityX(-speed)
-        this.player.anims.play('walk-left', true)
-      }
-      
-      if (this.cursorKeys.right.isDown) {
-        this.player.setVelocityX(speed)
-        this.player.anims.play('walk-right', true)        
-      }
-  
-      if (this.cursorKeys.up.isDown) {
-        this.player.setVelocityY(-speed)
-        // this.player.anims.play('walk-right', true)
-      }
-      
-      if (this.cursorKeys.down.isDown) {
-        this.player.setVelocityY(speed)
-        // this.player.anims.play('walk-left', true)
-      }
-    }
+    this._player.update(this.movementBounds, this.cursorKeys)
   }
 }
