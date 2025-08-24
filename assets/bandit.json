@@ -1,0 +1,73 @@
+{
+  "frames": {
+    "walk-right-1": { "frame": { "x": 273, "y": 0, "w": 34, "h": 70 } },
+    "walk-right-2": { "frame": { "x": 181, "y": 0, "w": 36, "h": 69 } },
+    "walk-right-3": { "frame": { "x": 375, "y": 276, "w": 30, "h": 69 } },
+    "walk-right-4": { "frame": { "x": 181, "y": 70, "w": 18, "h": 70 } },
+    "walk-right-5": { "frame": { "x": 247, "y": 0, "w": 25, "h": 71 } },
+    "walk-right-6": { "frame": { "x": 273, "y": 71, "w": 34, "h": 70 } },
+    "walk-right-7": { "frame": { "x": 339, "y": 139, "w": 35, "h": 69 } },
+    "walk-right-8": { "frame": { "x": 339, "y": 209, "w": 30, "h": 69 } },
+    "walk-right-9": { "frame": { "x": 120, "y": 70, "w": 20, "h": 70 } },
+    "walk-right-10": { "frame": { "x": 339, "y": 279, "w": 29, "h": 71 } },
+
+    "walk-left-1": { "frame": { "x": 0, "y": 224, "w": 34, "h": 70 } },
+    "walk-left-2": { "frame": { "x": 0, "y": 0, "w": 36, "h": 69 } },
+    "walk-left-3": { "frame": { "x": 273, "y": 213, "w": 30, "h": 69 } },
+    "walk-left-4": { "frame": { "x": 273, "y": 142, "w": 18, "h": 70 } },
+    "walk-left-5": { "frame": { "x": 247, "y": 72, "w": 25, "h": 71 } },
+    "walk-left-6": { "frame": { "x": 0, "y": 70, "w": 34, "h": 70 } },
+    "walk-left-7": { "frame": { "x": 339, "y": 69, "w": 35, "h": 69 } },
+    "walk-left-8": { "frame": { "x": 120, "y": 0, "w": 30, "h": 69 } },
+    "walk-left-9": { "frame": { "x": 218, "y": 69, "w": 20, "h": 70 } },
+    "walk-left-10": { "frame": { "x": 151, "y": 0, "w": 29, "h": 71 } },
+
+    "idle-right-1": { "frame": { "x": 218, "y": 0, "w": 28, "h": 68 } },
+    "idle-right-2": { "frame": { "x": 308, "y": 133, "w": 28, "h": 68 } },
+    "idle-right-3": { "frame": { "x": 151, "y": 72, "w": 28, "h": 68 } },
+    "idle-right-4": { "frame": { "x": 308, "y": 271, "w": 28, "h": 69 } },
+    "idle-right-5": { "frame": { "x": 91, "y": 0, "w": 28, "h": 69 } },
+    "idle-right-6": { "frame": { "x": 375, "y": 207, "w": 28, "h": 68 } },
+
+    "idle-left-1": { "frame": { "x": 308, "y": 202, "w": 28, "h": 68 } },
+    "idle-left-2": { "frame": { "x": 375, "y": 137, "w": 28, "h": 69 } },
+    "idle-left-3": { "frame": { "x": 35, "y": 224, "w": 28, "h": 69 } },
+    "idle-left-4": { "frame": { "x": 91, "y": 70, "w": 28, "h": 68 } },
+    "idle-left-5": { "frame": { "x": 218, "y": 140, "w": 28, "h": 68 } },
+    "idle-left-6": { "frame": { "x": 308, "y": 64, "w": 28, "h": 68 } },
+
+    "hurt-right-1": { "frame": { "x": 217, "y": 224, "w": 29, "h": 61 } },
+    "hurt-right-2": { "frame": { "x": 54, "y": 295, "w": 30, "h": 63 } },
+    "hurt-right-3": { "frame": { "x": 156, "y": 224, "w": 30, "h": 65 } },
+
+    "hurt-left-1": { "frame": { "x": 187, "y": 224, "w": 29, "h": 61 } },
+    "hurt-left-2": { "frame": { "x": 308, "y": 0, "w": 30, "h": 63 } },
+    "hurt-left-3": { "frame": { "x": 181, "y": 141, "w": 30, "h": 65 } },
+
+    "attack-right-1": { "frame": { "x": 375, "y": 67, "w": 42, "h": 69 } },
+    "attack-right-2": { "frame": { "x": 49, "y": 141, "w": 48, "h": 67 } },
+    "attack-right-3": { "frame": { "x": 107, "y": 224, "w": 48, "h": 66 } },
+    "attack-right-4": { "frame": { "x": 0, "y": 295, "w": 53, "h": 66 } },
+
+    "attack-left-1": { "frame": { "x": 64, "y": 224, "w": 42, "h": 69 } },
+    "attack-left-2": { "frame": { "x": 0, "y": 141, "w": 48, "h": 67 } },
+    "attack-left-3": { "frame": { "x": 375, "y": 0, "w": 48, "h": 66 } },
+    "attack-left-4": { "frame": { "x": 37, "y": 0, "w": 53, "h": 66 } },
+
+    "dead-right-1": { "frame": { "x": 339, "y": 0, "w": 35, "h": 68 } },
+    "dead-right-2": { "frame": { "x": 85, "y": 295, "w": 53, "h": 60 } },
+    "dead-right-3": { "frame": { "x": 207, "y": 295, "w": 67, "h": 38 } },
+    "dead-right-4": { "frame": { "x": 0, "y": 209, "w": 63, "h": 14 } },
+
+    "dead-left-1": { "frame": { "x": 37, "y": 67, "w": 35, "h": 68 } },
+    "dead-left-2": { "frame": { "x": 98, "y": 141, "w": 53, "h": 60 } },
+    "dead-left-3": { "frame": { "x": 139, "y": 295, "w": 67, "h": 38 } },
+    "dead-left-4": { "frame": { "x": 139, "y": 334, "w": 63, "h": 14 } }
+  },
+  "meta": {
+    "image": "bandit-spritesheet.png",
+    "format": "RGBA8888",
+    "size": { "w": 423, "h": 361 },
+    "scale": "1"
+  }
+}
