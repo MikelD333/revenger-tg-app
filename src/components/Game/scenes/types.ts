@@ -10,3 +10,8 @@ export type TCursorKeys = {
   up: Phaser.Input.Keyboard.Key
   down: Phaser.Input.Keyboard.Key
 }
+
+export type TTarget = {
+  x: number
+  y: number
+}

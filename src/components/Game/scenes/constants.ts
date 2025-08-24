@@ -24,3 +24,10 @@ export const flashlightBoxes = [
     height: 38
   }
 ]
+
+export const movementBoundsData = {
+  x: 60,
+  y: 210,
+  height: 468,
+  width: 905
+}

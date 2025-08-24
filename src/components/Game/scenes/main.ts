@@ -1,15 +1,18 @@
 import Phaser from 'phaser'
 import VirtualJoystickPlugin from 'phaser3-rex-plugins/plugins/virtualjoystick-plugin.js'
-import { flashlightBoxes } from './constants'
+import { flashlightBoxes, movementBoundsData } from './constants'
 import { Player } from './entities/player/player'
 import VirtualJoyStick from 'phaser3-rex-plugins/plugins/virtualjoystick'
 import { TCursorKeys } from './types'
+import { EnemyManager } from './entities/enemy-manager'
 
 export class MainScene extends Phaser.Scene {
   private _player!: Player
+  private _enemyManager!: EnemyManager
   private movementBounds!: Phaser.Geom.Rectangle
   private joystick: VirtualJoyStick | null = null
   private cursorKeys: TCursorKeys | null = null
+
 
   constructor() {
     super({ key: 'MainScene' })
@@ -17,9 +20,12 @@ export class MainScene extends Phaser.Scene {
 
   preload() {
     this.load.image('player', 'assets/player.png')
-    this.load.spritesheet('hero', 'assets/hero_spritesheet.png', { frameWidth: 56, frameHeight: 86, spacing: 2, margin: 2 })
     this.load.image('dojo', 'assets/revenger-dojo.png')
     this.load.image('attack', 'assets/attack.png')
+
+    this.load.spritesheet('hero', 'assets/hero_spritesheet.png', { frameWidth: 56, frameHeight: 86, spacing: 2, margin: 2 })
+
+    this.load.atlas('bandit', 'assets/bandit-spritesheet.png', 'assets/bandit.json')
   }
 
   addFlashLightBoxes() {
@@ -37,7 +43,12 @@ export class MainScene extends Phaser.Scene {
   }
 
   addBounds() {
-    this.movementBounds = new Phaser.Geom.Rectangle(60, 210, 905, 468)
+    this.movementBounds = new Phaser.Geom.Rectangle(
+      movementBoundsData.x,
+      movementBoundsData.y,
+      movementBoundsData.width,
+      movementBoundsData.height
+    )
 
     this.addFlashLightBoxes()
   }
@@ -50,6 +61,7 @@ export class MainScene extends Phaser.Scene {
     this.cameras.main.setBounds(0, 0, background.width, background.height)
     this.physics.world.setBounds(0, 0, background.width, background.height)
 
+
     this._player = new Player({
       anims: this.anims,
       cameras: this.cameras,
@@ -57,6 +69,8 @@ export class MainScene extends Phaser.Scene {
       startX: background.width / 2,
       startY: background.width / 2
     })
+
+    this._enemyManager = new EnemyManager(this, this._player)
   }
 
   initJoystickPlugin() {
@@ -106,13 +120,13 @@ export class MainScene extends Phaser.Scene {
     this.addBounds()
 
     this.initJoystickPlugin()
-
-    // this._player.startAutoAttack()
   }
 
   update() {
     if (!this.joystick || !this.cursorKeys) return
 
     this._player.update(this.movementBounds, this.cursorKeys)
+
+    this._enemyManager.update()
   }
 }

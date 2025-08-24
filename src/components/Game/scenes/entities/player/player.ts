@@ -3,7 +3,7 @@ import { ATTACK_OFFSET_VALUE, PLAYER_SPEED, playerAnimations } from './constants
 import { PLAYER_ANIMATION_NAMES, PlayerCreateProps } from './types'
 import { isNotNullOrUndef } from '@/helpers/isNotNullOrUndef';
 
-export class Player {
+export class Player extends Phaser.Events.EventEmitter {
   private _playerSprite!: Phaser.Physics.Arcade.Sprite
   private _physics!: Phaser.Physics.Arcade.ArcadePhysics
   private _cameras!: Phaser.Cameras.Scene2D.CameraManager
@@ -12,6 +12,8 @@ export class Player {
   private _autoattackTimer: Phaser.Time.TimerEvent | null = null
 
   constructor({ anims, cameras, physics, startX, startY }: PlayerCreateProps) {
+    super()
+
     this._anims = anims
     this._cameras = cameras
     this._physics = physics
@@ -25,6 +27,10 @@ export class Player {
 
   addCollider(obstacles: Phaser.Physics.Arcade.StaticGroup) {
     this._physics.add.collider(this._playerSprite, obstacles)
+  }
+
+  getCoords() {
+    return { x: this._playerSprite.x, y: this._playerSprite.y }
   }
 
   setIdle() {
@@ -48,7 +54,7 @@ export class Player {
       callbackScope: this,
       loop: true
     })
-  }  
+  }
 
   update(bounds: Phaser.Geom.Rectangle, cursorKeys: TCursorKeys) {
     this._initUpdate(bounds)
@@ -162,6 +168,8 @@ export class Player {
       this._playerSprite.y,
       'attack'
     )
+
+    this._playerSprite.scene.physics.add.existing(slash)
   
     slash.setScale(1.2)
     slash.setAlpha(0.8)
@@ -169,6 +177,8 @@ export class Player {
     if (this._lastXDirection === 'left') {
       slash.setFlipX(true)
     }
+
+    this.emit('spawn-slash', slash)
   
     this._playerSprite.scene.time.delayedCall(200, () => slash.destroy())  
   }
